@@ -1,4 +1,4 @@
-# MERN and Docker boilerplate
+# Name and Shame
 
 ## Setup
 

@@ -7,7 +7,7 @@ Install:
 - npm
 - Docker and Docker Compose
 
-Create a `.env` file in the `/server` folder (see `.env.template`). For local development with docker, you may use `http://localhost:27017` as your `ATLAS_URI`.
+Create a `.env` file in the `/server` folder (see `.env.template`). For local development with docker, you may use `mongodb://mongo:27017/name-and-shame-db` as your `ATLAS_URI`.
 
 ## Usage
 
@@ -19,6 +19,6 @@ Run this project:
 
 See the project up at `http://localhost:3000`!
 
-Install package in client: `docker exec mern-test-client npm install --save <package-name>`
+Install package in client: `docker exec name-and-shame-client npm install --save <package-name>`
 
-Install package in server: `docker exec mern-test-client npm install --save <package-name>`
+Install package in server: `docker exec name-and-shame-server npm install --save <package-name>`

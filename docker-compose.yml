@@ -42,6 +42,8 @@ services:
       - "3000:3000"
     networks:
       - app-network
+    environment:
+      - CHOKIDAR_USEPOLLING=true
 
 networks:
     app-network:

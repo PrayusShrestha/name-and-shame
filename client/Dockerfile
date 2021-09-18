@@ -1,20 +1,22 @@
-# Dockerfile for React client
+FROM node:alpine
+RUN mkdir -p /usr/app
+RUN chown node:node /usr/app
+USER node
+WORKDIR /usr/app
 
-# Build react client
-FROM node:16.9-alpine
+# add `/web/node_modules/.bin` to $PATH
+ENV PATH /web/node_modules/.bin:$PATH
 
-# Working directory be app
-WORKDIR /usr/src/app
+# install app dependencies
+COPY --chown=node:node package.json /usr/app/
 
-COPY package*.json ./
+RUN npm install
 
-###  Installing dependencies
-
-RUN npm install --silent
-
-# copy local files to app folder
-COPY . .
+COPY --chown=node:node . /usr/app/
 
 EXPOSE 3000
 
-CMD ["npm","start"]
+RUN npm config set unsafe-perm true
+
+# start app
+CMD ["npm", "start"]

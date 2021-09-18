@@ -1,6 +1,4 @@
 const Company = require('../models/Company');
-const Review = require('../models/Review');
-const Tag = require('../models/Tag');
 const { findCompany, createCompany } = require('../utils/company_utils');
 const { upvote } = require('../utils/tag_utils');
 const { addReview } = require('../utils/review_utils');
@@ -11,7 +9,7 @@ module.exports = (app) => {
     // Gets a list of all companies
     app.get('/companies', async (req, res) => {
         companies = await findCompany();
-        res.send(companies);
+        res.json({ "companies": companies });
     }); 
     
     // Add company
@@ -20,13 +18,11 @@ module.exports = (app) => {
         const name = json.name;
         const industry = json.industry;
         
-        let status, err = await createCompany(name, industry);
-
-        if (status === 200) {
-            res.status(200);
-        } else {
-            res.status(400).json({ error: err });
-        }
+        const [statusCode, err] = await createCompany(name, industry);
+        res.json({
+            "status": statusCode,
+            "message": err
+        });
     });
 
     app.get('/companies/:name', async (req, res) => {

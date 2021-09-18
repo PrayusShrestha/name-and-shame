@@ -1,6 +1,5 @@
 require("dotenv").config();
 const Company = require('../models/Company');
-// const companies = require("../routes/companies");
 
 exports.findCompany = async (companyName="") => {
     if (companyName === "") {
@@ -20,3 +19,20 @@ exports.findCompany = async (companyName="") => {
     }
 };
 
+exports.createCompany = async (name, industry) => {
+    let newCompany = new Company({
+        name: name,
+        industry: industry,
+        reviews: [],
+        tags: []
+    });
+
+    error = 200;
+    try {
+        await newCompany.save();
+    } catch (err) {
+        return [400, err]; 
+    }
+
+    return [200, null];
+};

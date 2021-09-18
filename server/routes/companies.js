@@ -1,10 +1,10 @@
 const Company = require('../models/Company');
 const Review = require('../models/Review');
 const Tag = require('../models/Tag');
-const { findCompany, createCompany } = require('../utils/company_utils');
+const { findCompany, createCompany, autoSearch } = require('../utils/company_utils');
 const { upvote } = require('../utils/tag_utils');
-const { addReview } = require('../utils/review_utils');
 
+const { addReview } = require('../utils/review_utils');
 
 
 module.exports = (app) => {
@@ -20,7 +20,7 @@ module.exports = (app) => {
         const name = json.name;
         const industry = json.industry;
         
-        let status, err = await createCompany(name, industry);
+        let [status, err] = await createCompany(name, industry);
 
         if (status === 200) {
             res.status(200);
@@ -70,14 +70,11 @@ module.exports = (app) => {
     app.get('/companies/search/:name', async (req, res) => {
         let companies = await autoSearch(req.params.name);
         res.send(companies);
-        // const nameToSearch = req.params.name;
-        // Company.find({ 'name': { '$regex': nameToSearch, '$options': 'i' } }, function(err, companies) {
-        //     res.send(companies);
-        // });
+
     });
 
     app.post('company/:timestamp', async (req, res) => {
-        let status, err = await upvote(req.params.timestamp);
+        let [status, err] = await upvote(req.params.timestamp);
         if (status == 200) {
             res.send(200);
         } else {

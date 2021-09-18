@@ -1,6 +1,5 @@
 require("dotenv").config();
 const Company = require('../models/Company');
-// const companies = require("../routes/companies");
 
 exports.findCompany = async (companyName="") => {
     if (companyName === "") {
@@ -18,5 +17,24 @@ exports.findCompany = async (companyName="") => {
             return null;
         }
     }
+};
+
+exports.autoSearch = async (companyName) => {
+    let companies = Company.find(
+        { $text: { $search: companyName } },
+        { score: { $meta: "textScore" } }
+     ).sort( { score: { $meta: "textScore" } } );
+    
+    if (companies) {
+        return companies
+    } else {
+        return []
+    }
+
+
+    // Company.find({ 'name': { '$regex': nameToSearch, '$options': 'i' } }, (err, companies) => {
+    //     res.send(companies);
+    // });
+
 };
 

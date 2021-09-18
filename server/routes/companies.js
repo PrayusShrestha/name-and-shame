@@ -54,6 +54,13 @@ module.exports = function(app) {
         });
     }); 
 
+    app.get('/companies/search/:name', function(req, res) {
+        const nameToSearch = req.params.name;
+        Company.find({ 'name': { '$regex': nameToSearch, '$options': 'i' } }, function(err, companies) {
+            res.send(companies);
+        });
+    });
+
     app.get('/companies/:name', function(req, res) {
         if (req.params.name == 'Apple') {
             res.send(apple);
@@ -68,12 +75,11 @@ module.exports = function(app) {
             name: company.name,
             industry: company.industry
         });
-        try {
-            newCompany.save();
+        newCompany.save(function(err) {
+            if (err) {
+                res.status(400).json({ error: 'Error. Most likely duplicate key.' });
+            }
             res.status(200);
-        } catch (error) {
-            res.status(400).json({ error: 'Error. Most likely duplicate key.' });
-        }
-       
+        });
     });
 }

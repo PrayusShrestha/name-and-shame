@@ -53,22 +53,7 @@ module.exports = function(app) {
             res.send(companies);
         });
     }); 
-
-    app.get('/companies/search/:name', function(req, res) {
-        const nameToSearch = req.params.name;
-        Company.find({ 'name': { '$regex': nameToSearch, '$options': 'i' } }, function(err, companies) {
-            res.send(companies);
-        });
-    });
-
-    app.get('/companies/:name', function(req, res) {
-        if (req.params.name == 'Apple') {
-            res.send(apple);
-        } else {
-            res.send(microsoft);
-        }
-    });
-
+    
     app.post('/companies', function(req, res) {
         const company = req.body;
         const newCompany = new Company({
@@ -80,6 +65,45 @@ module.exports = function(app) {
                 res.status(400).json({ error: 'Error. Most likely duplicate key.' });
             }
             res.status(200);
+        });
+    });
+
+    app.get('/companies/:name', function(req, res) {
+        Company.findOne({ 'name': req.params.name }, function (err, company) {
+            res.send(company);
+        });
+    });
+
+    app.post('/companies/:name', function(req, res) {
+        // This is broken
+        const review = req.body;
+        const newReview = new Review({
+            timestamp: review.timestamp,
+            trashiness: review.trashiness,
+            description: review.description,
+        });
+        
+        newReview.save(function(err) {
+            if (err) {
+                console.log(err);
+            }
+        });
+        
+        const company = Company.findOne({ 'name': req.params.name });
+        console.log(company.reviews);
+        res.send(200);
+        
+        Company.findOneAndUpdate(
+            { 'name': req.params.name }, 
+            company,
+            {new: true}
+            );
+    });
+
+    app.get('/companies/search/:name', function(req, res) {
+        const nameToSearch = req.params.name;
+        Company.find({ 'name': { '$regex': nameToSearch, '$options': 'i' } }, function(err, companies) {
+            res.send(companies);
         });
     });
 }

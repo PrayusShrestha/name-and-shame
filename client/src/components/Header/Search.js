@@ -17,7 +17,7 @@ function Search() {
     };
 
     const loadOptions = (query) => {
-        return fetch(process.env.REACT_APP_SERVER_URI + "/search/" + query).then(res => res.json());
+        return fetch(process.env.REACT_APP_SERVER_URI + "comapnies/search/" + query).then(res => res.json());
     };
 
     return (

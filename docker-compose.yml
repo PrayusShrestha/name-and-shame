@@ -20,6 +20,7 @@ services:
       - app-network
   mongo:
     image: mongo
+    container_name: name-and-shame-db
     volumes:
       - data-volume:/data/db
     ports:

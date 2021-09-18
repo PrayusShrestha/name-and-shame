@@ -19,3 +19,4 @@ exports.findCompany = async (companyName="") => {
         }
     }
 };
+

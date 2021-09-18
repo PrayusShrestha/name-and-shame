@@ -12,6 +12,9 @@ const tagCarbon = new Tag({
     votes: 12
 });
 
+tagSlavery.save();
+tagCarbon.save();
+
 const reviewApple1 = new Review({
     timestamp: '2021-09-15',
     trashiness: 4,
@@ -26,12 +29,17 @@ const reviewApple2 = new Review({
     tags: [tagSlavery]
 });
 
+reviewApple1.save();
+reviewApple2.save();
+
 const apple = new Company({
     name: 'Apple',
     industry: 'Software',
     reviews: [reviewApple1, reviewApple2],
     tags: [tagSlavery, tagCarbon]
 });
+
+apple.save();
 
 const reviewMicrosoft1 = new Review({
     timestamp: '2021-09-17',
@@ -40,12 +48,34 @@ const reviewMicrosoft1 = new Review({
     tags: [tagCarbon]
 })
 
+reviewMicrosoft1.save();
+
 const microsoft = new Company({
     name: 'Microosft',
     industry: 'Microsoft',
     reviews: [reviewMicrosoft1],
     tags: [tagCarbon]
 })
+
+microsoft.save();
+
+const reviewAmazon = new Review({
+    timestamp: '2021-09-18',
+    trashiness: 5,
+    description: 'amazon',
+    tags: [tagCarbon]
+});
+
+reviewAmazon.save();
+
+const amazon = new Company({
+    name: 'Amazon',
+    industry: 'e-commerce',
+    reviews: [reviewAmazon],
+    tags: [tagCarbon]
+});
+
+amazon.save();
 
 module.exports = function(app) {
     app.get('/companies', function(req, res) {

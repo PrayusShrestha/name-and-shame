@@ -49,7 +49,9 @@ const microsoft = new Company({
 
 module.exports = function(app) {
     app.get('/companies', function(req, res) {
-        res.send([apple, microsoft]);
+        Company.find().exec(function(err, companies){
+            res.send(companies);
+        });
     }); 
 
     app.get('/companies/:name', function(req, res) {
@@ -58,5 +60,20 @@ module.exports = function(app) {
         } else {
             res.send(microsoft);
         }
+    });
+
+    app.post('/companies', function(req, res) {
+        const company = req.body;
+        const newCompany = new Company({
+            name: company.name,
+            industry: company.industry
+        });
+        try {
+            newCompany.save();
+            res.status(200);
+        } catch (error) {
+            res.status(400).json({ error: 'Error. Most likely duplicate key.' });
+        }
+       
     });
 }

@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const reviewSchema = new mongoose.Schema({
 	timestamp: {
-		type: Number,
+		type: Date,
 		required: true,
 		unique: false,
 	},
@@ -22,4 +22,4 @@ const reviewSchema = new mongoose.Schema({
 	},
 });
 
-export const model = mongoose.model("Review", reviewSchema);
+module.exports = mongoose.model("Review", reviewSchema);

@@ -5,7 +5,6 @@ services:
       dockerfile: Dockerfile
     image: name-and-shame-server
     container_name: name-and-shame-server
-    command: /usr/src/app/node_modules/.bin/nodemon server.js
     volumes:
       - ./server/:/usr/src/app
       - /usr/src/app/node_modules

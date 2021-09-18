@@ -1,110 +1,47 @@
 const Company = require('../models/Company');
 const Review = require('../models/Review');
 const Tag = require('../models/Tag');
+const { findCompany } = require('../utils/company_utils');
 
-const tagSlavery = new Tag({
-    name: 'Slavery',
-    votes: 3
-});
 
-const tagCarbon = new Tag({
-    name: 'Large carbon footprint',
-    votes: 12
-});
 
-tagSlavery.save();
-tagCarbon.save();
-
-const reviewApple1 = new Review({
-    timestamp: '2021-09-15',
-    trashiness: 4,
-    description: 'pear was better',
-    tags: [tagSlavery, tagCarbon]
-});
-
-const reviewApple2 = new Review({
-    timestamp: '2021-09-18',
-    trashiness: 2,
-    description: 'granny smith apples are good for pies',
-    tags: [tagSlavery]
-});
-
-reviewApple1.save();
-reviewApple2.save();
-
-const apple = new Company({
-    name: 'Apple',
-    industry: 'Software',
-    reviews: [reviewApple1, reviewApple2],
-    tags: [tagSlavery, tagCarbon]
-});
-
-apple.save();
-
-const reviewMicrosoft1 = new Review({
-    timestamp: '2021-09-17',
-    trashiness: 1,
-    description: 'microhard',
-    tags: [tagCarbon]
-})
-
-reviewMicrosoft1.save();
-
-const microsoft = new Company({
-    name: 'Microosft',
-    industry: 'Microsoft',
-    reviews: [reviewMicrosoft1],
-    tags: [tagCarbon]
-})
-
-microsoft.save();
-
-const reviewAmazon = new Review({
-    timestamp: '2021-09-18',
-    trashiness: 5,
-    description: 'amazon',
-    tags: [tagCarbon]
-});
-
-reviewAmazon.save();
-
-const amazon = new Company({
-    name: 'Amazon',
-    industry: 'e-commerce',
-    reviews: [reviewAmazon],
-    tags: [tagCarbon]
-});
-
-amazon.save();
-
-module.exports = function(app) {
-    app.get('/companies', function(req, res) {
-        Company.find().exec(function(err, companies){
-            res.send(companies);
-        });
+module.exports = (app) => {
+    // Gets a list of all companies
+    app.get('/companies', async (req, res) => {
+        companies = await findCompany();
+        console.log(companies)
+        res.send(companies);
     }); 
     
-    app.post('/companies', function(req, res) {
-        const company = req.body;
-        const newCompany = new Company({
+    // Add company
+    app.post('/companies', (req, res) => {
+        const json = req.body;
+        const name = json.name;
+        const industry = json.industry;
+        
+        let status = createCompany(name, industry);
+        res.send
+        
+        const new_company = new Company({
             name: company.name,
             industry: company.industry
         });
+        
         newCompany.save(function(err) {
             if (err) {
                 res.status(400).json({ error: 'Error. Most likely duplicate key.' });
             }
             res.status(200);
         });
+
     });
 
-    app.get('/companies/:name', function(req, res) {
-        Company.findOne({ 'name': req.params.name }, function (err, company) {
-            res.send(company);
-        });
+    app.get('/companies/:name', (req, res) => {
+        let company = findCompany(req.params.name);
+        res.send(company);
     });
 
-    app.post('/companies/:name', function(req, res) {
+    app.post('/companies/:name', (req, res) => {
         // This is broken
         const review = req.body;
         const newReview = new Review({
@@ -130,10 +67,11 @@ module.exports = function(app) {
             );
     });
 
-    app.get('/companies/search/:name', function(req, res) {
+    app.get('/companies/search/:name', (req, res) => {
         const nameToSearch = req.params.name;
         Company.find({ 'name': { '$regex': nameToSearch, '$options': 'i' } }, function(err, companies) {
             res.send(companies);
         });
     });
 }
+

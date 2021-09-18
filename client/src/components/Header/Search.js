@@ -9,7 +9,7 @@ function Search() {
 
     const handleChange = value => {
         setSelected(value);
-        history.push("/company");
+        history.push("/companies/" + value.name);
     };
 
     const handleInputChange = value => {
@@ -17,7 +17,8 @@ function Search() {
     };
 
     const loadOptions = (query) => {
-        return fetch(process.env.REACT_APP_SERVER_URI + "/companies/search/" + query).then(res => res.json());
+        return fetch(process.env.REACT_APP_SERVER_URI + "/companies/search/" + query)
+                .then(res => res.json());
     };
 
     return (

@@ -61,19 +61,20 @@ class Company extends React.Component {
 
         return (
             <div className="Company">
-                <div id = "company-header"></div>
-                    <div  id = "company-name"><h1>{this.name}</h1></div>
-                <h3>Average Trashiness</h3>
-                <span>{avgTrashiness}</span>
-                    <div className="company-tags"  class = "all-tags">
-                        <div class = "tag">
-                            {tags}
-                        </div>
+                <div id = "company-header">
+                    <div id = "company-name"><h1>{this.name}</h1></div>
+                    <span>{this.state.industry}</span>
+                    
+                    <h3 id = "avg-trash-title">Average Trashiness</h3>
+
+                    <div id = "avg-trash-center">
+                        <span id = "avg-trash">{avgTrashiness}</span>
                     </div>
-                <span>{this.state.industry}</span>
-                <div className="company-tags">
-                    {tags}
-                </div>
+
+                    <div className="company-tags"  class = "all-tags">
+                        {tags}
+                    </div></div>
+
                 <div className="company-reviews">
                     {reviews}
                 </div>

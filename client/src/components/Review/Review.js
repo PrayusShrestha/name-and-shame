@@ -10,13 +10,13 @@ function Review(props) {
             <h3 id = "review-title">{props.review.title}</h3>
             <div id = "review-content">
                 <div id = "review-left">
-                    <span id = "review-trash">{props.review.trashiness}/5</span>
+                    <div id = "review-trash"><span>{props.review.trashiness}/5</span></div>
                     <div className="review-tags">{tags}</div>
                     <span>{props.review.votes}</span>
                 </div>
                 <div id = "review-right">
                     <p id = "review-descrip">{props.review.description}</p>
-                    <span id = "review-time">{props.review.timestamp}</span>
+                    <div id = "review-time"><span>{props.review.timestamp.slice(0, 10)}</span></div>
                 </div>
             </div>
         </div>

@@ -1,15 +1,14 @@
 import React from "react";
-import { useHistory } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import AsyncSelect from 'react-select/async';
-import AsyncCreatable from 'react-select';
+import AsyncCreatableSelect from 'react-select/async-creatable';
 import { loadCompanies, loadTags } from '../../utils/SearchUtils';
-import { renderTags } from "../../utils/renderUtils";
 
 class ReviewForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            companyName: '',
+            company: null,
             industry: '',
             companyExists: false,
             submissionFailure: false,
@@ -26,6 +25,7 @@ class ReviewForm extends React.Component {
         this.handleNameChange = this.handleNameChange.bind(this);
         this.handleTagsChange = this.handleTagsChange.bind(this);
         this.handleTrashinessChange = this.handleTrashinessChange.bind(this);
+        this.searchTags = this.searchTags.bind(this);
     }
 
     handleIndustryChange(event) {
@@ -40,30 +40,16 @@ class ReviewForm extends React.Component {
         this.setState({reviewDescription: event.target.value});
     }
 
-    handleTagsChange(tagName) {
-        let tags = this.state.tags;
-        let tagAlreadySelected = false;
-
-        for (let i = 0; i < tags.length; i++) {
-            if (tags[i] === tagName) {
-                tags.splice(i, 1);
-                tagAlreadySelected = true;
-                break;
-            }
-        }
-
-        if (!tagAlreadySelected) {
-            tags.push(tagName);
-        }
-
-        this.setState({tags: tags});
+    handleTagsChange(tag) {
+        this.setState({tags: tag});
     }
 
-    handleNameChange(name) {
-        this.setState({companyName: name});
-        fetch(process.env.REACT_APP_SERVER_URI + "/companies/" + name)
+    handleNameChange(company) {
+        this.setState({company: company});
+        fetch(process.env.REACT_APP_SERVER_URI + "/companies/" + company.name)
+            .then(res => res.json())
             .then(res => {
-                if (res.ok) {
+                if (res) {
                     this.setState({
                         industry: res.industry,
                         companyExists: true
@@ -76,52 +62,64 @@ class ReviewForm extends React.Component {
         this.setState({trashiness: event.target.value});
     }
 
-    submitCompany() {
-        const response = fetch(process.env.REACT_APP_SERVER_URI + "/companies", {
-            method: 'POST',
-            headers: {
-                'Content-type': 'application/json'
-            },
-            body: {
-                'name': this.state.companyName,
-                'industry': this.state.industry
-            }
-        });
-
-        return response;
+    searchTags(tag) {
+        return loadTags(this.state.company.name, tag);
     }
 
-    submitReview(companyName) {
-        let timestamp = new Date().valueOf();
-        
-        const response = fetch(process.env.REACT_APP_SERVER_URI + "/companies/" + companyName, {
+    async submitCompany() {
+        let responseCode;
+        const response = await fetch(process.env.REACT_APP_SERVER_URI + "/companies", {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json'
             },
-            body: {
+            body: JSON.stringify({
+                'name': this.state.company.name,
+                'industry': this.state.industry
+            })
+        });
+
+        return response.json();
+    }
+
+    async submitReview() {
+        let timestamp = new Date().valueOf();
+        let responseCode;
+        
+        const response = await fetch(process.env.REACT_APP_SERVER_URI + "/companies/" + this.state.company.name, {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify({
                 title: this.state.reviewTitle,
                 description: this.state.reviewDescription,
-                timestamp: timestamp,
-                tags: this.state.tags,
-                trashiness: this.state.trashiness
-            }
+                timestamp: parseInt(timestamp),
+                tags: this.state.tags.map((tag, index) => {
+                    return tag.label;
+                }),
+                trashiness: parseInt(this.state.trashiness)
+            })
         });
 
-        return response;
+        return response.json();
     }
 
-    handleSubmit(event) {
+    async handleSubmit(event) {
         // validate inputs first
+        event.preventDefault();
 
-        const responseCompany = this.submitCompany();
+        const responseCompany = await this.submitCompany();
 
-        if (responseCompany !== 200) {
+        const responseReview = await this.submitReview();
+        const responseReviewCode = responseReview.msg[0];
+        //for(let i = 0; i < 999999; i++);
+        if (responseReviewCode != 200) {
             this.setState({submissionFailure: true});
+            return;
         }
-        
-
-        this.history.push("/companies/" + this.state.companyName);
+        this.props.history.push({
+            pathname: "/companies/" + this.state.company.name});
     }
 
     render() {
@@ -132,20 +130,19 @@ class ReviewForm extends React.Component {
             <AsyncSelect
                 onChange={this.handleNameChange}
                 loadOptions={loadCompanies}
-                value={this.state.companyName}
+                value={this.state.company}
                 getOptionLabel={e => e.name}
                 getOptionValue={e => e.name}
             />
         );
 
         let tagInput = (
-            <AsyncCreatable
+            <AsyncCreatableSelect
                 onChange={this.handleTagsChange}
-                loadOptions={loadTags}
+                loadOptions={this.searchTags}
+                isMulti
             />
         );
-
-        let tags = renderTags(this.state.tags);
 
         return (
             <form onSubmit={this.handleSubmit}>
@@ -159,16 +156,17 @@ class ReviewForm extends React.Component {
                     onChange={this.handleIndustryChange}/>
                 <label>Review Title</label>
                 <input type="text" 
-                    value={this.state.reviewTitle}/>
+                    value={this.state.reviewTitle}
+                    onChange={this.handleTitleChange}/>
                 <label>Trashiness</label>
                 <input type="number"
                     value={this.state.trashiness}
                     onChange={this.handleTrashinessChange}/>
-                {tags}
                 {tagInput}
                 <label>Description</label>
                 <input type="text" 
-                    value={this.state.reviewDescription}/>
+                    value={this.state.reviewDescription}
+                    onChange={this.handleDescriptionChange}/>
                 <input type="submit" value="Submit" />
             </form>
         );

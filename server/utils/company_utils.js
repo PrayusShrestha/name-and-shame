@@ -10,11 +10,13 @@ exports.findCompany = async (companyName="") => {
             return [];
         }
     } else {
+        console.log(toString(companyName));
         let company = await Company.findOne({ 'name': companyName });
         console.log(company);
         if (company) {
             return company;
         } else {
+            console.log("here");
             return null;
         }
     }

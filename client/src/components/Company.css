@@ -26,6 +26,7 @@
 #company-name {
     color: black;
     text-align: left;
+    margin-bottom: 0px;
 }
 
 .all-tags {

@@ -9,10 +9,10 @@ class ReviewForm extends React.Component {
 
     render() {
         return (
-        <div>
-            <Header />
-            <Form {...this.props}/>
-        </div>
+            <div>
+                <Header />
+                <Form {...this.props}/>
+            </div>
         );
     }
 }

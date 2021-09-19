@@ -2,7 +2,7 @@ import './Home.css'
 import Search from './Header/Search'
 import Form from './Review/Form'
 
-function Home() {
+function Home(props) {
     return (
         <div className="Home">
             <div id = "home-top">
@@ -12,7 +12,7 @@ function Home() {
             <p className = "home-text">Search for a company</p>
             <div id="home-search"><Search /></div>
             <p class = "home-text" id = "home-write-review">Write a review</p>
-            <div id = "home-form"><Form/></div>
+            <div id = "home-form"><Form {...props}/></div>
         </div>
     );
 }

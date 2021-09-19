@@ -47,11 +47,12 @@ class Company extends React.Component {
 
         for (let i in reviews) {
             count++;
-            trashinessSum += reviews[i].trashiness;
+            trashinessSum += parseInt(reviews[i].trashiness);
         }
 
         if (count === 0) return "No reviews";
-        return (String) (trashinessSum / count) + "/5";
+        let avg = trashinessSum / count;
+        return avg.toFixed(1) + "/5";
     }
 
     render() {

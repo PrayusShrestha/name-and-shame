@@ -4,6 +4,7 @@ import AsyncSelect from 'react-select/async';
 import AsyncCreatable from 'react-select';
 import { loadCompanies, loadTags } from '../../utils/SearchUtils';
 import { renderTags } from "../../utils/renderUtils";
+import "./ReviewForm.css";
 
 class ReviewForm extends React.Component {
     constructor(props) {
@@ -148,27 +149,38 @@ class ReviewForm extends React.Component {
         let tags = renderTags(this.state.tags);
 
         return (
-            <form onSubmit={this.handleSubmit}>
+            <form id="review-form" onSubmit={this.handleSubmit}>
                 {errorMsg}
                 <label>Company Name</label>
                 {companyInput}
                 <label>Industry</label>
+                <br />
                 <input type="text"
                     value={this.state.industry}
                     disabled={this.state.companyExists}
                     onChange={this.handleIndustryChange}/>
+                <br />
                 <label>Review Title</label>
+                <br />
                 <input type="text" 
                     value={this.state.reviewTitle}/>
+                <br />
                 <label>Trashiness</label>
+                <br />
                 <input type="number"
                     value={this.state.trashiness}
-                    onChange={this.handleTrashinessChange}/>
+                    onChange={this.handleTrashinessChange}
+                    min="0"
+                    max="5"/>
+                <label>Tags</label>
                 {tags}
                 {tagInput}
+                <br />
                 <label>Description</label>
+                <br />
                 <input type="text" 
                     value={this.state.reviewDescription}/>
+                <br />
                 <input type="submit" value="Submit" />
             </form>
         );

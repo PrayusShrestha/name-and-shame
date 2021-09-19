@@ -6,16 +6,23 @@ const { addReview } = require('../utils/review_utils');
 
 
 module.exports = (app) => {
+
+    app.post('/companies/:name/:id', async (req, res) => {
+        console.log('hi');
+        let [status, err] = await upvote(req.params.name, req.params.id);
+        if (status == 200) {
+            res.send(200);
+        } else {
+            res.status(400).json({ error: err });
+        }
+    });
+
     // Gets a list of all companies
     app.get('/companies', async (req, res) => {
         companies = await findCompany();
         res.json({ "companies": companies });
     }); 
-    
-    app.get('/companies/search/:name', async (req, res) => {
-        let companies = await autoSearch(req.params.name);
-        res.json({'companies': companies});
-    });
+      
 
     // Add company
     app.post('/companies', async (req, res) => {
@@ -30,6 +37,7 @@ module.exports = (app) => {
         });
     });
 
+
     app.get('/companies/:name', async (req, res) => {
         let company = await findCompany(req.params.name);
         res.send(company);
@@ -42,23 +50,25 @@ module.exports = (app) => {
 
     // Create a review
     app.post('/companies/:name', async (req, res) => {
-        // This is broken
         const json = req.body;
 
         let status, err = await addReview(
+            req.params.name,
+            json.title,
             json.timestamp,
             json.trashiness,
-            json.description
+            json.description,
+            json.tags
         );
+
+        res.json({ 'status': status, 'msg': err });
     });
 
-    app.post('company/:timestamp', async (req, res) => {
-        let [status, err] = await upvote(req.params.timestamp);
-        if (status == 200) {
-            res.send(200);
-        } else {
-            res.status(400).json({ error: err });
-        }
-    })
+    app.get('/companies/search/:name', async (req, res) => {
+        let companies = await autoSearch(req.params.name);
+        res.json({'companies': companies});
+    });
+
+   
 }
 

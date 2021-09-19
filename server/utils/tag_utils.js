@@ -3,18 +3,27 @@ const Company = require('../models/Company');
 const { findCompany } = require("./company_utils");
 
 
-exports.upvote = async (name, timestamp) => {
-    let company = findCompany(name);
-    let reviews = [];
+exports.upvote = async (name, id) => {
+    let company = await findCompany(name);
     
     if (company) {
         let reviews = company.reviews;
-        for (let review of reviews) {
-            if (review.timestamp == timestamp) {
-                review.votes++;
+        let reviewIdx;
+        for (let i = 0; i < reviews.length; i++) {
+            if (reviews[i]._id == id) {
+                reviewIdx = i;
             }
         }
-        const res = await Company.updateOne({ name: 'name' }, { reviews: reviews });
+
+        let review = reviews[reviewIdx];
+        review.votes = review.votes + 1;
+
+        reviews.splice(reviewIdx, 1);
+        reviews.push(review);
+        
+        company.reviews = reviews;
+        await company.save();
+        company = await findCompany(name);
         return [200];
     } else {
         return [400, "Error: could not find company"]

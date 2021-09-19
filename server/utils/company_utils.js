@@ -10,7 +10,7 @@ exports.findCompany = async (companyName="") => {
             return [];
         }
     } else {
-        let company = await Company.model.findOne({ 'name': companyName });
+        let company = await Company.findOne({ 'name': companyName });
         if (company) {
             return company;
         } else {

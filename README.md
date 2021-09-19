@@ -2,6 +2,8 @@
 
 Welcome to Name and Shame, a website where you can review and read others' reviews of other companies! The purpose of Name and Shame is to bring awareness to unethical corporate practices and hold business accountable.
 
+We built this for HacktheNorth 2021!
+
 ## Table of Contents
 
 1. [Features](#features)
@@ -11,8 +13,6 @@ Welcome to Name and Shame, a website where you can review and read others' revie
 5. [Contributors](#contributors)
 
 ## Features
-
-### Implemented
 
 On the home page, you are greeted with a home page where you can search for a company or start writing a review right away!
 
@@ -26,12 +26,19 @@ You can also see all reviews written for a company. See the average unethical ra
 
 ![Alt text](/assets/company-page.png?raw=true "Company reviews page")
 
-### Planned
-- Search companies by industry and receive a list of companies sorted by unethical ratings
-- Show latest reviews on front page
-- Sort reviews by popularity/date
-- Allow upvotes on reviews
-- Sort company tags by frequency and counts associated with them
+Here's a simple table of our implemented and planned features:
+
+| Feature  | Status  |
+|---|---|
+| Search companies by name  | :heavy_check_mark:  |
+| See all reviews associated with a company  | :heavy_check_mark:  |
+| See average unethical rating of a company plus associated tags  | :heavy_check_mark: |
+| Write a review for existing and new company, with unethical rating, review title, description | :heavy_check_mark: |
+|Add tags to your review | :heavy_check_mark: |
+| Search companies by industry and receive a list of companies sorted by unethical ratings  | :heavy_minus_sign:  |
+| Allow upvotes on reviews  | :heavy_minus_sign:  |
+| Sort company tags by frequency and counts associated with them  | :heavy_minus_sign:  |
+| Sort reviews by popularity/date  | :heavy_minus_sign:  |
 
 
 ## Setup

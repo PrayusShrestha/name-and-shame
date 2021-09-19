@@ -14,6 +14,7 @@ export function renderTags(tags) {
 };
 
 export function renderTrashCans(count) {
+    if (count === 0) {return (<div>0/5</div>)}
     let trash = [...Array(count)].map((val, i) => (
         <img src="/trash.png" alt = "trash can"></img>
     ));

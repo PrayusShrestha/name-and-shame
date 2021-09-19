@@ -3,11 +3,15 @@ import Header from '../Header/Header'
 import Form from './Form'
 
 class ReviewForm extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+
     render() {
         return (
         <div>
             <Header />
-            <Form />
+            <Form {...this.props}/>
         </div>
         );
     }

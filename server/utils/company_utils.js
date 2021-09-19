@@ -37,7 +37,6 @@ exports.createCompany = async (name, industry) => {
     return [200, null];
 };
 exports.autoSearch = async (companyName) => {
-    console.log(companyName);
     let companies = await Company.find({ 'name': { '$regex': companyName, '$options': 'i' } });
     if (companies) {
         return companies

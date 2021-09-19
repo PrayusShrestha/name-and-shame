@@ -31,6 +31,11 @@ exports.upvote = async (name, id) => {
 
 };
 
-exports.findTags = async (name) => {
-    
+exports.findTags = async (tag) => {
+   let company = await findCompany(tag);
+   let tags = company.tags;
+   console.log(tags);
+   let newTags = tags.filter(x => x.toLowerCase().includes(tag.toLowerCase()));
+   console.log(newTags);
+   return newTags;
 }

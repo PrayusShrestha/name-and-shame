@@ -12,7 +12,6 @@ function Review(props) {
                 <div id = "review-left">
                     <div id = "review-trash"><span>{props.review.trashiness}/5</span></div>
                     <div className="review-tags">{tags}</div>
-                    <span>{props.review.votes}</span>
                 </div>
                 <div id = "review-right">
                     <p id = "review-descrip">{props.review.description}</p>

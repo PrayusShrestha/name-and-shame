@@ -2,7 +2,7 @@
 
 Welcome to Name and Shame, a website where you can review and read others' reviews of other companies! The purpose of Name and Shame is to bring awareness to unethical corporate practices and hold businesses accountable.
 
-We built this for HacktheNorth 2021!
+We built this for Hack the North 2021!
 
 ## Table of Contents
 
@@ -51,16 +51,26 @@ Create a `.env` file in the `/server` folder (see `.env.template`). For local de
 ## Usage
 
 Build this project:
-`$ docker-compose build`
+```bash
+$ docker-compose build
+```
 
 Run this project:
-`$ docker-compose up`
+```bash
+$ docker-compose up
+```
 
 See the project up at `http://localhost:3000`!
 
-Install package in client: `$ docker exec name-and-shame-client npm install --save <package-name>`
+Install package in client: 
+```bash
+$ docker exec name-and-shame-client npm install --save <package-name>
+```
 
-Install package in server: `$ docker exec name-and-shame-server npm install --save <package-name>`
+Install package in server: 
+```bash
+$ docker exec name-and-shame-server npm install --save <package-name>
+```
 
 ## Technologies
 - MongoDB

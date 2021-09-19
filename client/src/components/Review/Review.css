@@ -52,3 +52,17 @@
     bottom: 5px;
     right: 20px;
 }
+
+.avg-trash-center {
+    text-align: center;
+}
+
+.avg-trash-center img {
+    max-height: 25px;
+}
+
+.avg-trash {
+    font-style: bold;
+    text-align: center;
+    font-size: 50px;
+}

@@ -3,7 +3,7 @@ import Review from './Review/Review';
 import Header from './Header/Header';
 import './Company.css';
 
-import { renderTags } from '../utils/renderUtils';
+import { renderTags, renderTrashCans } from '../utils/renderUtils';
 import Error from './Error';
 
 class Company extends React.Component {
@@ -62,9 +62,7 @@ class Company extends React.Component {
         if (count === 0) return "No reviews";
 
         let avg = Math.round(trashinessSum / count);
-        return [...Array(avg),].map((val, i) => (
-            <img src="/trash.png" alt = "trash can"></img>
-        ));
+        return renderTrashCans(avg);
     }
 
     render() {
@@ -95,9 +93,9 @@ class Company extends React.Component {
                         <span id = "avg-trash">{avgTrashiness}</span>
                     </div>
 
-                        <div className="company-tags all-tags">
-                            {tags}
-                        </div></div>
+                    <div className="company-tags all-tags">
+                        {tags}
+                    </div></div>
 
                     <div className="company-reviews">
                         {reviews}

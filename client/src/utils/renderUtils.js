@@ -11,3 +11,14 @@ export function renderTags(tags) {
         return;
     }
 };
+
+export function renderTrashCans(count) {
+    let trash = [...Array(count)].map((val, i) => (
+        <img src="/trash.png" alt = "trash can"></img>
+    ));
+    return (
+        <div className="avg-trash-center">
+            <span className="avg-trash">{trash}</span>
+        </div>
+    );
+}

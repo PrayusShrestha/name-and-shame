@@ -6,10 +6,15 @@ const { addReview } = require('../utils/review_utils');
 
 
 module.exports = (app) => {
+    app.get('/tags/:name/:tag', async (req, res) => {
+        console.log("tags");
+        let tags = await findTags(req.params.name, req.params.tag);
+        res.send(tags);
+    });
 
     app.get('/companies/search/:name', async (req, res) => {
         let companies = await autoSearch(req.params.name);
-        res.json({'companies': companies});
+        res.send(companies);
     });
 
     app.post('/companies/:name/:id', async (req, res) => {
@@ -41,15 +46,9 @@ module.exports = (app) => {
         });
     });
 
-
     app.get('/companies/:name', async (req, res) => {
         let company = await findCompany(req.params.name);
         res.send(company);
-    });
-
-    app.get('/companies/:name/:tag', async (req, res) => {
-        let tags = await findTags(req.params.name, req.params.tag);
-        res.send(tags);
     });
 
     // Create a review
@@ -66,6 +65,6 @@ module.exports = (app) => {
         );
 
         res.json({ 'status': status, 'msg': err });
-    });   
+    });
 }
 

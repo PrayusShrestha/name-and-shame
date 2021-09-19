@@ -3,6 +3,7 @@ import Review from './Review/Review';
 import Tag from './Review/Tag';
 import './Company.css';
 
+import { renderTags } from '../utils/renderUtils';
 
 class Company extends React.Component {
     constructor(props) {
@@ -40,19 +41,6 @@ class Company extends React.Component {
         }
     }
 
-    renderTags(tags) {
-        if (tags.length > 0) {
-            return tags.map((tag, index) => (
-                <Tag key={index}
-                    name={tag.name}
-                    count={tag.count}
-                />
-            ));
-        } else {
-            return;
-        }
-    }
-
     getAverageTrashiness(reviews) {
         let count = 0;
         let trashinessSum = 0.0;
@@ -62,18 +50,18 @@ class Company extends React.Component {
             trashinessSum += reviews[i].trashiness;
         }
 
-        if (count == 0) return "No reviews";
+        if (count === 0) return "No reviews";
         return (String) (trashinessSum / count) + "/5";
     }
 
     render() {
-        let tags = this.renderTags(this.state.tags);
+        let tags = renderTags(this.state.tags);
         let reviews = this.renderReviews(this.state.reviews);
         let avgTrashiness = this.getAverageTrashiness(this.state.reviews);
 
         return (
             <div className="Company">
-                <div id = "company-header">
+                <div id = "company-header"></div>
                     <div  id = "company-name"><h1>{this.name}</h1></div>
                 <h3>Average Trashiness</h3>
                 <span>{avgTrashiness}</span>
@@ -82,6 +70,9 @@ class Company extends React.Component {
                             {tags}
                         </div>
                     </div>
+                <span>{this.state.industry}</span>
+                <div className="company-tags">
+                    {tags}
                 </div>
                 <div className="company-reviews">
                     {reviews}

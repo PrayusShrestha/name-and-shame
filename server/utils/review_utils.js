@@ -8,6 +8,7 @@ exports.addReview = async (name, title, timestamp, trashiness, description, tags
 
     if (company) {
         let reviews = company.reviews;
+        let companyTags = company.tags;
         console.log(reviews[0]);
         let review = {
             "title": title,
@@ -20,7 +21,10 @@ exports.addReview = async (name, title, timestamp, trashiness, description, tags
         }
         reviews.push(review);
         company.reviews = reviews;
-        console.log("this is okay");
+        for (tag of tags) {
+            if (!companyTags.includes(tag)) companyTags.push(tag);
+        }
+        company.tags = companyTags;
         await company.save();
         // const res = await Company.updateOne({ 'name': company}, {'reviews': reviews});
         return [200];

@@ -1,28 +1,25 @@
 import Tag from './Tag';
+import './Review.css';
+import { renderTags, renderTrashCans } from '../../utils/renderUtils';
 
 function Review(props) {
-    const renderTags = (tags) => {
-        if (tags.length > 0) {
-            return tags.map((tag, index) => (
-                <Tag key={index}
-                    name={tag.name}
-                />
-            ));
-        } else {
-            return;
-        }
-    };
-
     let tags = renderTags(props.review.tags);
+    let date = new Date(props.review.timestamp);
+    let trashCans = renderTrashCans(props.review.trashiness);
 
     return (
         <div className="Review">
-            <h4>{props.review.title}</h4>
-            <span>{props.review.trashiness}/5</span>
-            <p>{props.review.description}</p>
-            <div className="review-tags">{tags}</div>
-            <span>{props.review.votes}</span>
-            <span>{props.review.timestamp}</span>
+            <h3 id = "review-title">{props.review.title}</h3>
+            <div id = "review-content">
+                <div id = "review-left">
+                    <div id = "review-trash"><span>{trashCans}</span></div>
+                    <div className="review-tags">{tags}</div>
+                </div>
+                <div id = "review-right">
+                    <p id = "review-descrip">{props.review.description}</p>
+                    <div id = "review-time"><span>{date.toLocaleString()}</span></div>
+                </div>
+            </div>
         </div>
     );
 }

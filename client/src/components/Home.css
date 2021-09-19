@@ -1,0 +1,43 @@
+.Home {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+}
+
+#home-top {
+    background-color: #597B67;
+    color: white;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-right: 20%;
+    padding-left: 20%;
+    position: relative;
+}
+
+.home-text {
+    color: black;
+    font-size: 20px;
+}
+
+
+
+#home-search {
+    margin: auto;
+    width: 60%;
+}
+
+#home-title {
+    margin: 40px auto 20px auto;
+    font-size: 80px;
+    color: white;
+    text-decoration: none;
+}
+
+#home-form {
+    width: 60%;
+    margin: auto;
+}
+
+#home-write-review {
+    padding-top: 30px;
+}

@@ -11,6 +11,7 @@ class Company extends React.Component {
         this.name = props.match.params.name;
 
         this.state = {
+            companyExists: true,
             industry: '',
             reviews: [],
             tags: []
@@ -20,12 +21,19 @@ class Company extends React.Component {
     componentDidMount() {
         fetch(process.env.REACT_APP_SERVER_URI + '/companies/' + this.name)
             .then(res => res.json())
-            .then(res => {
-                this.setState({
-                    industry: res.industry,
-                    reviews: res.reviews,
-                    tags: res.tags
-                });
+            .then(res => 
+                {
+                    console.log(res);
+                    if (parseInt(res.status) != 404) {
+                        this.setState({
+                            companyExists: true,
+                            industry: res.industry,
+                            reviews: res.reviews,
+                            tags: res.tags
+                        })
+                    } else {
+                        this.setState({companyExists: false});
+                    }
             });
     }
 
@@ -60,9 +68,16 @@ class Company extends React.Component {
     }
 
     render() {
+        if (!this.state.companyExists) {
+            this.props.history.push({
+                pathname: "/error"
+            });
+        }
+
         let tags = renderTags(this.state.tags);
         let reviews = this.renderReviews(this.state.reviews);
         let avgTrashiness = this.getAverageTrashiness(this.state.reviews);
+        console.log(this.state);
 
         return (
             <div className="Company">
@@ -76,7 +91,7 @@ class Company extends React.Component {
                         <span id = "avg-trash">{avgTrashiness}</span>
                     </div>
 
-                    <div className="company-tags"  class = "all-tags">
+                    <div className="company-tags all-tags">
                         {tags}
                     </div></div>
 

@@ -49,7 +49,14 @@ module.exports = (app) => {
 
     app.get('/companies/:name', async (req, res) => {
         let company = await findCompany(req.params.name);
-        res.send(company);
+        if (company) {
+            res.send(company)
+        } else {
+            res.json({
+                "status": 404,
+                "message": "Company not found!"
+            })
+        };
     });
 
     // Create a review

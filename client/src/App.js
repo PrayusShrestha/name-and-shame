@@ -5,6 +5,7 @@ import Header from './components/Header/Header';
 import Home from './components/Home';
 import Company from './components/Company';
 import ReviewForm from './components/Review/ReviewForm';
+import Error from './components/Error';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           <Route path="/companies/:name" 
             component={Company} 
           />
+          <Error msg=""/>
         </Switch>
       </div>
     </Router>

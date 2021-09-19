@@ -54,7 +54,6 @@ class Company extends React.Component {
         console.log(trashinessSum + " " + count);
 
         let avg = Math.round(trashinessSum / count) - 1;
-        if (avg < 0) avg = 0;
         return [...Array(avg),].map((val, i) => (
             <img src="/trash.png"></img>
         ));

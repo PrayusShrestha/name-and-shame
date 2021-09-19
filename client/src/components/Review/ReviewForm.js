@@ -46,17 +46,24 @@ class ReviewForm extends React.Component {
     }
 
     handleNameChange(company) {
+        if (company.value) {
+            company = {name: company.value};
+        }
         this.setState({company: company});
-        fetch(process.env.REACT_APP_SERVER_URI + "/companies/" + company.name)
-            .then(res => res.json())
-            .then(res => {
-                if (res) {
-                    this.setState({
-                        industry: res.industry,
-                        companyExists: true
-                    });
-                }
-            });
+        
+        if (company.name) {
+            fetch(process.env.REACT_APP_SERVER_URI + "/companies/" + company.name)
+                .then(res => res.json())
+                .then(res => {
+                    console.log(res);
+                    if (res.name) {
+                        this.setState({
+                            industry: res.industry,
+                            companyExists: true
+                        });
+                    }
+                });
+        }
     }
 
     handleTrashinessChange(event) {
@@ -128,22 +135,42 @@ class ReviewForm extends React.Component {
         if (this.state.submissionFailure) errorMsg = <span>An error occured! Please make sure you've filled in all inputs correctly.</span>
         
         let companyInput = (
-            <AsyncSelect
+            <AsyncCreatableSelect
                 onChange={this.handleNameChange}
                 loadOptions={loadCompanies}
                 value={this.state.company}
-                getOptionLabel={e => e.name}
-                getOptionValue={e => e.name}
+                getOptionLabel={e => {
+                    if (e.name) {
+                        return e.name;
+                    } else {
+                        return e.label;
+                    }
+                }}
+                getOptionValue={e => {
+                    if (e.name) {
+                        return e.name;
+                    } else {
+                        return e.value;
+                    }
+                }}
             />
         );
 
         let tagInput = (
             <AsyncCreatableSelect
                 onChange={this.handleTagsChange}
-                loadOptions={this.searchTags}
                 isMulti
             />
         );
+        if (this.state.companyExists) {
+            tagInput = (
+                <AsyncCreatableSelect
+                    onChange={this.handleTagsChange}
+                    loadOptions={this.searchTags}
+                    isMulti
+                />
+            );
+        }
 
         return (
             <form id="review-form" onSubmit={this.handleSubmit}>

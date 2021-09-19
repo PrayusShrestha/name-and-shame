@@ -1,6 +1,8 @@
 import React from 'react';
 import Review from './Review/Review';
 import Tag from './Review/Tag';
+import './Company.css';
+
 
 class Company extends React.Component {
     constructor(props) {
@@ -71,11 +73,15 @@ class Company extends React.Component {
 
         return (
             <div className="Company">
-                <h2>{this.name}</h2>
+                <div id = "company-header">
+                    <div  id = "company-name"><h1>{this.name}</h1></div>
                 <h3>Average Trashiness</h3>
                 <span>{avgTrashiness}</span>
-                <div className="company-tags">
-                    {tags}
+                    <div className="company-tags"  class = "all-tags">
+                        <div class = "tag">
+                            {tags}
+                        </div>
+                    </div>
                 </div>
                 <div className="company-reviews">
                     {reviews}

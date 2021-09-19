@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import AsyncSelect from 'react-select/async';
 import { useHistory } from 'react-router-dom';
+import CompanySearch from '../CompanySearch';
+import './Search.css';
 import { loadCompanies } from '../../utils/CompanySearchUtil';
 
 function Search() {

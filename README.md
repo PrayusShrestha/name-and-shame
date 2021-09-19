@@ -1,6 +1,6 @@
 # Name and Shame
 
-Welcome to Name and Shame, a website where you can review and read others' reviews of other companies! The purpose of Name and Shame is to bring awareness to unethical corporate practices and hold business accountable.
+Welcome to Name and Shame, a website where you can review and read others' reviews of other companies! The purpose of Name and Shame is to bring awareness to unethical corporate practices and hold businesses accountable.
 
 We built this for HacktheNorth 2021!
 

@@ -61,6 +61,8 @@ class Company extends React.Component {
             trashinessSum += reviews[i].trashiness;
         }
 
+        if (count == 0) return "No reviews";
+        
         return trashinessSum / count;
     }
 

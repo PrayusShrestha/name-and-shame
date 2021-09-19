@@ -47,11 +47,17 @@ class Company extends React.Component {
 
         for (let i in reviews) {
             count++;
-            trashinessSum += reviews[i].trashiness;
+            trashinessSum += parseInt(reviews[i].trashiness);
         }
 
         if (count === 0) return "No reviews";
-        return (String) (trashinessSum / count) + "/5";
+        console.log(trashinessSum + " " + count);
+
+        let avg = Math.round(trashinessSum / count) - 1;
+        if (avg < 0) avg = 0;
+        return [...Array(avg),].map((val, i) => (
+            <img src="/trash.png"></img>
+        ));
     }
 
     render() {
@@ -61,19 +67,21 @@ class Company extends React.Component {
 
         return (
             <div className="Company">
-                <div id = "company-header"></div>
-                    <div  id = "company-name"><h1>{this.name}</h1></div>
-                <h3>Average Trashiness</h3>
-                <span>{avgTrashiness}</span>
-                    <div className="company-tags"  class = "all-tags">
-                        <div class = "tag">
-                            {tags}
-                        </div>
+                <div id = "company-header">
+                    <div id = "company-name"><h1>{this.name}</h1></div>
+                    <span>{this.state.industry}</span>
+                    
+                    <h3 id = "avg-trash-title">Average Trashiness</h3>
+
+                    <div id = "avg-trash-center">
+                        <img src="/trash.png"></img>
+                        <span id = "avg-trash">{avgTrashiness}</span>
                     </div>
-                <span>{this.state.industry}</span>
-                <div className="company-tags">
-                    {tags}
-                </div>
+
+                    <div className="company-tags"  class = "all-tags">
+                        {tags}
+                    </div></div>
+
                 <div className="company-reviews">
                     {reviews}
                 </div>

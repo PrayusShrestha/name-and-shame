@@ -1,6 +1,9 @@
 #site-title {
     align-items: left;
     width: 30%;
+    color: white;
+    text-decoration: none;
+
 }
 
 .Header {

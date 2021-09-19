@@ -3,6 +3,7 @@ import { withRouter } from 'react-router-dom';
 import AsyncSelect from 'react-select/async';
 import AsyncCreatableSelect from 'react-select/async-creatable';
 import { loadCompanies, loadTags } from '../../utils/SearchUtils';
+import "./ReviewForm.css";
 
 class ReviewForm extends React.Component {
     constructor(props) {
@@ -145,25 +146,34 @@ class ReviewForm extends React.Component {
         );
 
         return (
-            <form onSubmit={this.handleSubmit}>
+            <form id="review-form" onSubmit={this.handleSubmit}>
                 {errorMsg}
                 <label>Company Name</label>
                 {companyInput}
                 <label>Industry</label>
+                <br />
                 <input type="text"
                     value={this.state.industry}
                     disabled={this.state.companyExists}
                     onChange={this.handleIndustryChange}/>
+                <br />
                 <label>Review Title</label>
+                <br />
                 <input type="text" 
                     value={this.state.reviewTitle}
                     onChange={this.handleTitleChange}/>
                 <label>Trashiness</label>
+                <br />
                 <input type="number"
                     value={this.state.trashiness}
-                    onChange={this.handleTrashinessChange}/>
+                    onChange={this.handleTrashinessChange}
+                    min="0"
+                    max="5"/>
+                <label>Tags</label>
                 {tagInput}
+                <br />
                 <label>Description</label>
+                <br />
                 <input type="text" 
                     value={this.state.reviewDescription}
                     onChange={this.handleDescriptionChange}/>

@@ -19,6 +19,8 @@
     font-size: 20px;
 }
 
+
+
 #home-search {
     margin: auto;
     width: 60%;
@@ -29,4 +31,13 @@
     font-size: 80px;
     color: white;
     text-decoration: none;
+}
+
+#home-form {
+    width: 60%;
+    margin: auto;
+}
+
+#home-write-review {
+    padding-top: 30px;
 }

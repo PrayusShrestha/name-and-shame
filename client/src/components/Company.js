@@ -51,8 +51,11 @@ class Company extends React.Component {
         }
 
         if (count === 0) return "No reviews";
-        let avg = trashinessSum / count;
-        return avg.toFixed(1) + "/5";
+        let avg = Math.round(trashinessSum / count) - 1;
+        console.log(avg);
+        return [...Array(avg),].map((val, i) => (
+            <img src="/trash.png"></img>
+        ));
     }
 
     render() {
@@ -69,6 +72,7 @@ class Company extends React.Component {
                     <h3 id = "avg-trash-title">Average Trashiness</h3>
 
                     <div id = "avg-trash-center">
+                        <img src="/trash.png"></img>
                         <span id = "avg-trash">{avgTrashiness}</span>
                     </div>
 

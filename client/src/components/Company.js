@@ -4,6 +4,7 @@ import Header from './Header/Header';
 import './Company.css';
 
 import { renderTags } from '../utils/renderUtils';
+import Error from './Error';
 
 class Company extends React.Component {
     constructor(props) {
@@ -14,7 +15,8 @@ class Company extends React.Component {
             companyExists: true,
             industry: '',
             reviews: [],
-            tags: []
+            tags: [],
+            errorMsg: ''
         };
     }
 
@@ -23,7 +25,6 @@ class Company extends React.Component {
             .then(res => res.json())
             .then(res => 
                 {
-                    console.log(res);
                     if (parseInt(res.status) != 404) {
                         this.setState({
                             companyExists: true,
@@ -32,7 +33,7 @@ class Company extends React.Component {
                             tags: res.tags
                         })
                     } else {
-                        this.setState({companyExists: false});
+                        this.setState({companyExists: false, errorMsg: res.message});
                     }
             });
     }
@@ -59,7 +60,6 @@ class Company extends React.Component {
         }
 
         if (count === 0) return "No reviews";
-        console.log(trashinessSum + " " + count);
 
         let avg = Math.round(trashinessSum / count);
         return [...Array(avg),].map((val, i) => (
@@ -69,15 +69,17 @@ class Company extends React.Component {
 
     render() {
         if (!this.state.companyExists) {
-            this.props.history.push({
-                pathname: "/error"
-            });
+            return (
+                <div>
+                    <Header />
+                    <Error msg={this.state.errorMsg}/>
+                </div>
+            );
         }
 
         let tags = renderTags(this.state.tags);
         let reviews = this.renderReviews(this.state.reviews);
         let avgTrashiness = this.getAverageTrashiness(this.state.reviews);
-        console.log(this.state);
 
         return (
             <div className="Company-whole">

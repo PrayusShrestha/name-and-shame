@@ -1,4 +1,5 @@
 import Tag from "../components/Review/Tag";
+import Review from "../components/Review/Review";
 
 export function renderTags(tags) {
     if (tags.length > 0) {
@@ -21,4 +22,16 @@ export function renderTrashCans(count) {
             <span className="avg-trash">{trash}</span>
         </div>
     );
+}
+
+export function renderReviews(reviews) {
+    if (reviews.length > 0) {
+        return reviews.map((review, index) => (
+            <Review key={index}
+                review={review}
+            />
+        ));
+    } else {
+        return;
+    }
 }

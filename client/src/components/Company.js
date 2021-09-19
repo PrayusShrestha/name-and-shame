@@ -3,7 +3,7 @@ import Review from './Review/Review';
 import Header from './Header/Header';
 import './Company.css';
 
-import { renderTags, renderTrashCans } from '../utils/renderUtils';
+import { renderTags, renderTrashCans, renderReviews } from '../utils/renderUtils';
 import Error from './Error';
 
 class Company extends React.Component {
@@ -38,18 +38,6 @@ class Company extends React.Component {
             });
     }
 
-    renderReviews(reviews) {
-        if (reviews.length > 0) {
-            return reviews.map((review, index) => (
-                <Review key={index}
-                    review={review}
-                />
-            ));
-        } else {
-            return;
-        }
-    }
-
     getAverageTrashiness(reviews) {
         let count = 0;
         let trashinessSum = 0.0;
@@ -76,7 +64,7 @@ class Company extends React.Component {
         }
 
         let tags = renderTags(this.state.tags);
-        let reviews = this.renderReviews(this.state.reviews);
+        let reviews = renderReviews(this.state.reviews);
         let avgTrashiness = this.getAverageTrashiness(this.state.reviews);
 
         return (

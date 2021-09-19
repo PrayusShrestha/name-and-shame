@@ -44,8 +44,9 @@ module.exports = (app) => {
     });
 
     app.get('/companies/:name/:tag', async (req, res) => {
+        console.log(req.params.tag);
         let tags = await findTags(req.params.name, req.params.tag);
-        res.send(tags);
+        res.json({'tags': tags});
     });
 
     // Create a review

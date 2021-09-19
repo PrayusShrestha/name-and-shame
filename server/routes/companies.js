@@ -1,139 +1,74 @@
 const Company = require('../models/Company');
-const Review = require('../models/Review');
-const Tag = require('../models/Tag');
+const { findCompany, createCompany, autoSearch } = require('../utils/company_utils');
+const { upvote, findTags } = require('../utils/tag_utils');
 
-const tagSlavery = new Tag({
-    name: 'Slavery',
-    votes: 3
-});
+const { addReview } = require('../utils/review_utils');
 
-const tagCarbon = new Tag({
-    name: 'Large carbon footprint',
-    votes: 12
-});
 
-tagSlavery.save();
-tagCarbon.save();
+module.exports = (app) => {
 
-const reviewApple1 = new Review({
-    timestamp: '2021-09-15',
-    trashiness: 4,
-    description: 'pear was better',
-    tags: [tagSlavery, tagCarbon]
-});
+    app.post('/companies/:name/:id', async (req, res) => {
+        console.log('hi');
+        let [status, err] = await upvote(req.params.name, req.params.id);
+        if (status == 200) {
+            res.send(200);
+        } else {
+            res.status(400).json({ error: err });
+        }
+    });
 
-const reviewApple2 = new Review({
-    timestamp: '2021-09-18',
-    trashiness: 2,
-    description: 'granny smith apples are good for pies',
-    tags: [tagSlavery]
-});
-
-reviewApple1.save();
-reviewApple2.save();
-
-const apple = new Company({
-    name: 'Apple',
-    industry: 'Software',
-    reviews: [reviewApple1, reviewApple2],
-    tags: [tagSlavery, tagCarbon]
-});
-
-apple.save();
-
-const reviewMicrosoft1 = new Review({
-    timestamp: '2021-09-17',
-    trashiness: 1,
-    description: 'microhard',
-    tags: [tagCarbon]
-})
-
-reviewMicrosoft1.save();
-
-const microsoft = new Company({
-    name: 'Microosft',
-    industry: 'Microsoft',
-    reviews: [reviewMicrosoft1],
-    tags: [tagCarbon]
-})
-
-microsoft.save();
-
-const reviewAmazon = new Review({
-    timestamp: '2021-09-18',
-    trashiness: 5,
-    description: 'amazon',
-    tags: [tagCarbon]
-});
-
-reviewAmazon.save();
-
-const amazon = new Company({
-    name: 'Amazon',
-    industry: 'e-commerce',
-    reviews: [reviewAmazon],
-    tags: [tagCarbon]
-});
-
-amazon.save();
-
-module.exports = function(app) {
-    app.get('/companies', function(req, res) {
-        Company.find().exec(function(err, companies){
-            res.send(companies);
-        });
+    // Gets a list of all companies
+    app.get('/companies', async (req, res) => {
+        companies = await findCompany();
+        res.json({ "companies": companies });
     }); 
-    
-    app.post('/companies', function(req, res) {
-        const company = req.body;
-        const newCompany = new Company({
-            name: company.name,
-            industry: company.industry
-        });
-        newCompany.save(function(err) {
-            if (err) {
-                res.status(400).json({ error: 'Error. Most likely duplicate key.' });
-            }
-            res.status(200);
+      
+
+    // Add company
+    app.post('/companies', async (req, res) => {
+        const json = req.body;
+        const name = json.name;
+        const industry = json.industry;
+        
+        const [statusCode, err] = await createCompany(name, industry);
+        res.json({
+            "status": statusCode,
+            "message": err
         });
     });
 
-    app.get('/companies/:name', function(req, res) {
-        Company.findOne({ 'name': req.params.name }, function (err, company) {
-            res.send(company);
-        });
+
+    app.get('/companies/:name', async (req, res) => {
+        let company = await findCompany(req.params.name);
+        res.send(company);
     });
 
-    app.post('/companies/:name', function(req, res) {
-        // This is broken
-        const review = req.body;
-        const newReview = new Review({
-            timestamp: review.timestamp,
-            trashiness: review.trashiness,
-            description: review.description,
-        });
-        
-        newReview.save(function(err) {
-            if (err) {
-                console.log(err);
-            }
-        });
-        
-        const company = Company.findOne({ 'name': req.params.name });
-        console.log(company.reviews);
-        res.send(200);
-        
-        Company.findOneAndUpdate(
-            { 'name': req.params.name }, 
-            company,
-            {new: true}
-            );
+    app.get('/companies/:name/:tag', async (req, res) => {
+        let tags = await findTags(req.params.name, req.params.tag);
+        res.send(tags);
     });
 
-    app.get('/companies/search/:name', function(req, res) {
-        const nameToSearch = req.params.name;
-        Company.find({ 'name': { '$regex': nameToSearch, '$options': 'i' } }, function(err, companies) {
-            res.send(companies);
-        });
+    // Create a review
+    app.post('/companies/:name', async (req, res) => {
+        const json = req.body;
+
+        let status, err = await addReview(
+            req.params.name,
+            json.title,
+            json.timestamp,
+            json.trashiness,
+            json.description,
+            json.tags
+        );
+
+        res.json({ 'status': status, 'msg': err });
     });
+
+    app.get('/companies/search/:name', async (req, res) => {
+        let companies = await autoSearch(req.params.name);
+        res.json({'companies': companies});
+    });
+
+   
 }
+

@@ -16,6 +16,7 @@
     "express": "^4.17.1",
     "mongoose": "^5.10.x",
     "mongoose-fuzzy-searching": "^2.0.2",
-    "nodemon": "^2.0.12"
+    "nodemon": "^2.0.12",
+    "uuid": "^8.3.2"
   }
 }

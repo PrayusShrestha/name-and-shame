@@ -16,7 +16,6 @@ class Company extends React.Component {
     }
 
     componentDidMount() {
-        console.log("fetching " + this.name);
         fetch(process.env.REACT_APP_SERVER_URI + '/companies/' + this.name)
             .then(res => res.json())
             .then(res => {

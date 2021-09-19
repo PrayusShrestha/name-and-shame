@@ -21,3 +21,7 @@ exports.upvote = async (name, timestamp) => {
     }
 
 };
+
+exports.findTags = async (name) => {
+    
+}

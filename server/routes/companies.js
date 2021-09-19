@@ -1,8 +1,6 @@
 const Company = require('../models/Company');
-const Review = require('../models/Review');
-const Tag = require('../models/Tag');
 const { findCompany, createCompany, autoSearch } = require('../utils/company_utils');
-const { upvote } = require('../utils/tag_utils');
+const { upvote, findTags } = require('../utils/tag_utils');
 
 const { addReview } = require('../utils/review_utils');
 
@@ -14,6 +12,11 @@ module.exports = (app) => {
         res.json({ "companies": companies });
     }); 
     
+    app.get('/companies/search/:name', async (req, res) => {
+        let companies = await autoSearch(req.params.name);
+        res.json({'companies': companies});
+    });
+
     // Add company
     app.post('/companies', async (req, res) => {
         const json = req.body;
@@ -47,28 +50,6 @@ module.exports = (app) => {
             json.trashiness,
             json.description
         );
-        
-        // newReview.save(function(err) {
-        //     if (err) {
-        //         console.log(err);
-        //     }
-        // });
-        
-        // const company = Company.findOne({ 'name': req.params.name });
-        // console.log(company.reviews);
-        // res.send(200);
-        
-        // Company.findOneAndUpdate(
-        //     { 'name': req.params.name }, 
-        //     company,
-        //     {new: true}
-        //     );
-    });
-
-    app.get('/companies/search/:name', async (req, res) => {
-        let companies = await autoSearch(req.params.name);
-        res.send(companies);
-
     });
 
     app.post('company/:timestamp', async (req, res) => {

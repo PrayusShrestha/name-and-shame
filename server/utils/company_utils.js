@@ -37,21 +37,11 @@ exports.createCompany = async (name, industry) => {
     return [200, null];
 };
 exports.autoSearch = async (companyName) => {
-    let companies = Company.find(
-        { $text: { $search: companyName } },
-        { score: { $meta: "textScore" } }
-     ).sort( { score: { $meta: "textScore" } } );
-    
+    let companies = await Company.find({ 'name': { '$regex': companyName, '$options': 'i' } });
     if (companies) {
         return companies
     } else {
         return []
     }
-
-
-    // Company.find({ 'name': { '$regex': nameToSearch, '$options': 'i' } }, (err, companies) => {
-    //     res.send(companies);
-    // });
-
 };
 

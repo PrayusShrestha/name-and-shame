@@ -1,16 +1,13 @@
 import React from "react";
-import AsyncSelect from 'react-select/async';
-import AsyncCreatable from 'react-select';
+import AsyncCreatableSelect from 'react-select/async-creatable';
 import { loadCompanies, loadTags } from '../../utils/SearchUtils';
-import { renderTags } from "../../utils/renderUtils";
 import "./Form.css";
-import Header from '../Header/Header'
 
-class ReviewForm extends React.Component {
+class Form extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            companyName: '',
+            company: null,
             industry: '',
             companyExists: false,
             submissionFailure: false,
@@ -27,6 +24,7 @@ class ReviewForm extends React.Component {
         this.handleNameChange = this.handleNameChange.bind(this);
         this.handleTagsChange = this.handleTagsChange.bind(this);
         this.handleTrashinessChange = this.handleTrashinessChange.bind(this);
+        this.searchTags = this.searchTags.bind(this);
     }
 
     handleIndustryChange(event) {
@@ -41,88 +39,102 @@ class ReviewForm extends React.Component {
         this.setState({reviewDescription: event.target.value});
     }
 
-    handleTagsChange(tagName) {
-        let tags = this.state.tags;
-        let tagAlreadySelected = false;
-
-        for (let i = 0; i < tags.length; i++) {
-            if (tags[i] === tagName) {
-                tags.splice(i, 1);
-                tagAlreadySelected = true;
-                break;
+    handleTagsChange(tag) {
+        let newTags = [];
+        for (let el of tag) {
+            if (!el.value) {
+                let newTag = {label: el};
+                newTags.push(newTag);
+            } else {
+                newTags.push(el);
             }
         }
-
-        if (!tagAlreadySelected) {
-            tags.push(tagName);
-        }
-
-        this.setState({tags: tags});
+        this.setState({tags: newTags});
     }
 
-    handleNameChange(name) {
-        this.setState({companyName: name});
-        fetch(process.env.REACT_APP_SERVER_URI + "/companies/" + name)
-            .then(res => {
-                if (res.ok) {
-                    this.setState({
-                        industry: res.industry,
-                        companyExists: true
-                    });
-                }
-            });
+    handleNameChange(company) {
+        if (company.value) {
+            company = {name: company.value};
+        }
+        this.setState({company: company});
+        
+        if (company.name) {
+            fetch(process.env.REACT_APP_SERVER_URI + "/companies/" + company.name)
+                .then(res => res.json())
+                .then(res => {
+                    console.log(res);
+                    if (res.name) {
+                        this.setState({
+                            industry: res.industry,
+                            companyExists: true
+                        });
+                    }
+                });
+        }
     }
 
     handleTrashinessChange(event) {
         this.setState({trashiness: event.target.value});
     }
 
-    submitCompany() {
-        const response = fetch(process.env.REACT_APP_SERVER_URI + "/companies", {
-            method: 'POST',
-            headers: {
-                'Content-type': 'application/json'
-            },
-            body: {
-                'name': this.state.companyName,
-                'industry': this.state.industry
-            }
-        });
-
-        return response;
+    searchTags(tag) {
+        return loadTags(this.state.company.name, tag);
     }
 
-    submitReview(companyName) {
-        let timestamp = new Date().valueOf();
-        
-        const response = fetch(process.env.REACT_APP_SERVER_URI + "/companies/" + companyName, {
+    async submitCompany() {
+        let responseCode;
+        const response = await fetch(process.env.REACT_APP_SERVER_URI + "/companies", {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json'
             },
-            body: {
+            body: JSON.stringify({
+                'name': this.state.company.name,
+                'industry': this.state.industry
+            })
+        });
+
+        return response.json();
+    }
+
+    async submitReview() {
+        let timestamp = new Date().valueOf();
+        let responseCode;
+        
+        const response = await fetch(process.env.REACT_APP_SERVER_URI + "/companies/" + this.state.company.name, {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify({
                 title: this.state.reviewTitle,
                 description: this.state.reviewDescription,
-                timestamp: timestamp,
-                tags: this.state.tags,
-                trashiness: this.state.trashiness
-            }
+                timestamp: parseInt(timestamp),
+                tags: this.state.tags.map((tag, index) => {
+                    return tag.label;
+                }),
+                trashiness: parseInt(this.state.trashiness)
+            })
         });
 
-        return response;
+        return response.json();
     }
 
-    handleSubmit(event) {
+    async handleSubmit(event) {
         // validate inputs first
+        event.preventDefault();
 
-        const responseCompany = this.submitCompany();
+        const responseCompany = await this.submitCompany();
 
-        if (responseCompany !== 200) {
+        const responseReview = await this.submitReview();
+        const responseReviewCode = responseReview.msg[0];
+        //for(let i = 0; i < 999999; i++);
+        if (responseReviewCode != 200) {
             this.setState({submissionFailure: true});
+            return;
         }
-        
-
-        this.history.push("/companies/" + this.state.companyName);
+        this.props.history.push({
+            pathname: "/companies/" + this.state.company.name});
     }
 
     render() {
@@ -130,26 +142,60 @@ class ReviewForm extends React.Component {
         if (this.state.submissionFailure) errorMsg = <span>An error occured! Please make sure you've filled in all inputs correctly.</span>
         
         let companyInput = (
-            <AsyncSelect
+            <AsyncCreatableSelect
                 onChange={this.handleNameChange}
                 loadOptions={loadCompanies}
-                value={this.state.companyName}
-                getOptionLabel={e => e.name}
-                getOptionValue={e => e.name}
+                value={this.state.company}
+                getOptionLabel={e => {
+                    if (e.name) {
+                        return e.name;
+                    } else {
+                        return e.label;
+                    }
+                }}
+                getOptionValue={e => {
+                    if (e.name) {
+                        return e.name;
+                    } else {
+                        return e.value;
+                    }
+                }}
             />
         );
 
         let tagInput = (
-            <AsyncCreatable
+            <AsyncCreatableSelect
                 onChange={this.handleTagsChange}
-                loadOptions={loadTags}
+                isMulti
             />
         );
-
-        let tags = renderTags(this.state.tags);
+        if (this.state.companyExists) {
+            tagInput = (
+                <AsyncCreatableSelect
+                    onChange={this.handleTagsChange}
+                    loadOptions={this.searchTags}
+                    getOptionLabel={e => {
+                        if (e.label) {
+                            return e.label;
+                        } else {
+                            console.log(e);
+                            return e;
+                        }
+                    }}
+                    getOptionValue={e => {
+                        if (e.label) {
+                            return e.label;
+                        } else {
+                            console.log(e);
+                            return e;
+                        }
+                    }}
+                    isMulti
+                />
+            );
+        }
 
         return (
-            <div className = "review-form-whole">
             <form id="review-form" onSubmit={this.handleSubmit}>
                 {errorMsg}
                 <label>Company Name</label>
@@ -164,8 +210,8 @@ class ReviewForm extends React.Component {
                 <label>Review Title</label>
                 <br />
                 <input type="text" 
-                    value={this.state.reviewTitle}/>
-                <br />
+                    value={this.state.reviewTitle}
+                    onChange={this.handleTitleChange}/>
                 <label>Trashiness</label>
                 <br />
                 <input type="number"
@@ -174,19 +220,17 @@ class ReviewForm extends React.Component {
                     min="0"
                     max="5"/>
                 <label>Tags</label>
-                {tags}
                 {tagInput}
                 <br />
                 <label>Description</label>
                 <br />
                 <input type="text" 
-                    value={this.state.reviewDescription}/>
-                <br />
-                <input type="submit" value="Submit" id = "submit-butt"/>
+                    value={this.state.reviewDescription}
+                    onChange={this.handleDescriptionChange}/>
+                <input type="submit" value="Submit" />
             </form>
-            </div>
         );
     }
 }
 
-export default ReviewForm;
+export default Form;

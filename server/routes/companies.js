@@ -28,6 +28,7 @@ module.exports = (app) => {
 
     // Gets a list of all companies
     app.get('/companies', async (req, res) => {
+        // Company.remove({}, function(err){}); //Uncomment for cleardb
         companies = await findCompany();
         res.json({ "companies": companies });
     }); 
@@ -56,7 +57,6 @@ module.exports = (app) => {
     // Create a review
     app.post('/companies/:name', async (req, res) => {
         const json = req.body;
-
         let status, err = await addReview(
             req.params.name,
             json.title,

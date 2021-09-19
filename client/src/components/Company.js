@@ -4,6 +4,7 @@ import Header from './Header/Header';
 import './Company.css';
 
 import { renderTags } from '../utils/renderUtils';
+import Error from './Error';
 
 class Company extends React.Component {
     constructor(props) {
@@ -11,21 +12,29 @@ class Company extends React.Component {
         this.name = props.match.params.name;
 
         this.state = {
+            companyExists: true,
             industry: '',
             reviews: [],
-            tags: []
+            tags: [],
+            errorMsg: ''
         };
     }
 
     componentDidMount() {
         fetch(process.env.REACT_APP_SERVER_URI + '/companies/' + this.name)
             .then(res => res.json())
-            .then(res => {
-                this.setState({
-                    industry: res.industry,
-                    reviews: res.reviews,
-                    tags: res.tags
-                });
+            .then(res => 
+                {
+                    if (parseInt(res.status) != 404) {
+                        this.setState({
+                            companyExists: true,
+                            industry: res.industry,
+                            reviews: res.reviews,
+                            tags: res.tags
+                        })
+                    } else {
+                        this.setState({companyExists: false, errorMsg: res.message});
+                    }
             });
     }
 
@@ -51,7 +60,6 @@ class Company extends React.Component {
         }
 
         if (count === 0) return "No reviews";
-        console.log(trashinessSum + " " + count);
 
         let avg = Math.round(trashinessSum / count);
         return [...Array(avg),].map((val, i) => (
@@ -60,6 +68,15 @@ class Company extends React.Component {
     }
 
     render() {
+        if (!this.state.companyExists) {
+            return (
+                <div>
+                    <Header />
+                    <Error msg={this.state.errorMsg}/>
+                </div>
+            );
+        }
+
         let tags = renderTags(this.state.tags);
         let reviews = this.renderReviews(this.state.reviews);
         let avgTrashiness = this.getAverageTrashiness(this.state.reviews);
@@ -78,7 +95,7 @@ class Company extends React.Component {
                         <span id = "avg-trash">{avgTrashiness}</span>
                     </div>
 
-                        <div className="company-tags"  class = "all-tags">
+                        <div className="company-tags all-tags">
                             {tags}
                         </div></div>
 

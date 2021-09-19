@@ -227,7 +227,7 @@ class Form extends React.Component {
                 <input type="text" 
                     value={this.state.reviewDescription}
                     onChange={this.handleDescriptionChange}/>
-                <input type="submit" value="Submit" />
+                <input type="submit" value="Submit" id = "submit-butt"/>
             </form>
         );
     }

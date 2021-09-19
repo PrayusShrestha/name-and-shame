@@ -61,7 +61,7 @@ class Company extends React.Component {
         }
 
         if (count == 0) return "No reviews";
-        return trashinessSum / count;
+        return (String) (trashinessSum / count) + "/5";
     }
 
     render() {
@@ -73,7 +73,7 @@ class Company extends React.Component {
             <div className="Company">
                 <h2>{this.name}</h2>
                 <h3>Average Trashiness</h3>
-                <span>{avgTrashiness}/5</span>
+                <span>{avgTrashiness}</span>
                 <div className="company-tags">
                     {tags}
                 </div>

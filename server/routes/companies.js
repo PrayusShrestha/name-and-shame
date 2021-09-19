@@ -6,6 +6,11 @@ const { addReview } = require('../utils/review_utils');
 
 
 module.exports = (app) => {
+    app.get('/companies/search/:name', async (req, res) => {
+        console.log("hi");
+        let companies = await autoSearch(req.params.name);
+        res.json({'companies': companies});
+    });
 
     app.get('/tags/:name/:tag', async (req, res) => {
         console.log("tags");
@@ -66,6 +71,6 @@ module.exports = (app) => {
         );
 
         res.json({ 'status': status, 'msg': err });
-    });   
+    });
 }
 

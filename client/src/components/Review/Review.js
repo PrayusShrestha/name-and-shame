@@ -1,19 +1,8 @@
 import Tag from './Tag';
 import './Review.css';
+import { renderTags } from '../../utils/renderUtils';
 
 function Review(props) {
-    const renderTags = (tags) => {
-        if (tags.length > 0) {
-            return tags.map((tag, index) => (
-                <Tag key={index}
-                    name={tag.name}
-                />
-            ));
-        } else {
-            return;
-        }
-    };
-
     let tags = renderTags(props.review.tags);
 
     return (

@@ -11,6 +11,7 @@ exports.findCompany = async (companyName="") => {
         }
     } else {
         let company = await Company.findOne({ 'name': companyName });
+        console.log(company);
         if (company) {
             return company;
         } else {
@@ -26,6 +27,8 @@ exports.createCompany = async (name, industry) => {
         reviews: [],
         tags: []
     });
+
+    console.log(newCompany);
 
     error = 200;
     try {

@@ -1,61 +1,174 @@
 import React from "react";
 import { useHistory } from 'react-router-dom';
+import AsyncSelect from 'react-select/async';
+import AsyncCreatable from 'react-select';
+import { loadCompanies, loadTags } from '../../utils/SearchUtils';
+import { renderTags } from "../../utils/renderUtils";
 
 class ReviewForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            name: '',
+            companyName: '',
             industry: '',
-            submissionFailure: false
+            companyExists: false,
+            submissionFailure: false,
+            reviewTitle: '',
+            reviewDescription: '',
+            tags: [],
+            trashiness: 0,
         };
-        this.history = useHistory();
 
-        this.handleNameChange = this.handleNameChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-    }
-
-    handleNameChange(event) {
-        this.setState({name: event.target.value});
+        this.handleTitleChange = this.handleTitleChange.bind(this);
+        this.handleIndustryChange = this.handleIndustryChange.bind(this);
+        this.handleDescriptionChange = this.handleDescriptionChange.bind(this);
+        this.handleNameChange = this.handleNameChange.bind(this);
+        this.handleTagsChange = this.handleTagsChange.bind(this);
+        this.handleTrashinessChange = this.handleTrashinessChange.bind(this);
     }
 
     handleIndustryChange(event) {
         this.setState({industry: event.target.value});
     }
 
-    handleSubmit(event) {
-        const response = await fetch(process.env.REACT_APP_SERVER_URI + "/companies", {
+    handleTitleChange(event) {
+        this.setState({reviewTitle: event.target.value});
+    }
+
+    handleDescriptionChange(event) {
+        this.setState({reviewDescription: event.target.value});
+    }
+
+    handleTagsChange(tagName) {
+        let tags = this.state.tags;
+        let tagAlreadySelected = false;
+
+        for (let i = 0; i < tags.length; i++) {
+            if (tags[i] === tagName) {
+                tags.splice(i, 1);
+                tagAlreadySelected = true;
+                break;
+            }
+        }
+
+        if (!tagAlreadySelected) {
+            tags.push(tagName);
+        }
+
+        this.setState({tags: tags});
+    }
+
+    handleNameChange(name) {
+        this.setState({companyName: name});
+        fetch(process.env.REACT_APP_SERVER_URI + "/companies/" + name)
+            .then(res => {
+                if (res.ok) {
+                    this.setState({
+                        industry: res.industry,
+                        companyExists: true
+                    });
+                }
+            });
+    }
+
+    handleTrashinessChange(event) {
+        this.setState({trashiness: event.target.value});
+    }
+
+    submitCompany() {
+        const response = fetch(process.env.REACT_APP_SERVER_URI + "/companies", {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json'
             },
             body: {
-                'name': this.state.name,
+                'name': this.state.companyName,
                 'industry': this.state.industry
             }
         });
 
-        if (response == 200) {
-            this.history.push("/companies/" + this.state.name);
-        } else {
+        return response;
+    }
+
+    submitReview(companyName) {
+        let timestamp = new Date().valueOf();
+        
+        const response = fetch(process.env.REACT_APP_SERVER_URI + "/companies/" + companyName, {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: {
+                title: this.state.reviewTitle,
+                description: this.state.reviewDescription,
+                timestamp: timestamp,
+                tags: this.state.tags,
+                trashiness: this.state.trashiness
+            }
+        });
+
+        return response;
+    }
+
+    handleSubmit(event) {
+        // validate inputs first
+
+        const responseCompany = this.submitCompany();
+
+        if (responseCompany !== 200) {
             this.setState({submissionFailure: true});
         }
+        
+
+        this.history.push("/companies/" + this.state.companyName);
     }
 
     render() {
         let errorMsg;
         if (this.state.submissionFailure) errorMsg = <span>An error occured! Please make sure you've filled in all inputs correctly.</span>
+        
+        let companyInput = (
+            <AsyncSelect
+                onChange={this.handleNameChange}
+                loadOptions={loadCompanies}
+                value={this.state.companyName}
+                getOptionLabel={e => e.name}
+                getOptionValue={e => e.name}
+            />
+        );
+
+        let tagInput = (
+            <AsyncCreatable
+                onChange={this.handleTagsChange}
+                loadOptions={loadTags}
+            />
+        );
+
+        let tags = renderTags(this.state.tags);
+
         return (
             <form onSubmit={this.handleSubmit}>
                 {errorMsg}
                 <label>Company Name</label>
-                <input type="text"
-                    value={this.state.name}
-                    onChange={this.handleNameChange}/>
+                {companyInput}
                 <label>Industry</label>
                 <input type="text"
                     value={this.state.industry}
+                    disabled={this.state.companyExists}
                     onChange={this.handleIndustryChange}/>
+                <label>Review Title</label>
+                <input type="text" 
+                    value={this.state.reviewTitle}/>
+                <label>Trashiness</label>
+                <input type="number"
+                    value={this.state.trashiness}
+                    onChange={this.handleTrashinessChange}/>
+                {tags}
+                {tagInput}
+                <label>Description</label>
+                <input type="text" 
+                    value={this.state.reviewDescription}/>
                 <input type="submit" value="Submit" />
             </form>
         );

@@ -54,7 +54,6 @@ module.exports = (app) => {
     // Create a review
     app.post('/companies/:name', async (req, res) => {
         const json = req.body;
-
         let status, err = await addReview(
             req.params.name,
             json.title,

@@ -5,5 +5,5 @@ export function loadCompanies(query) {
 
 export function loadTags(company, tag) {
     return fetch(process.env.REACT_APP_SERVER_URI + "/tags/" + company + "/" + tag)
-            .then(res => res.json().tags);
+            .then(res => res.json());
 }

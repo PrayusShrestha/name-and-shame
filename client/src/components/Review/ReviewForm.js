@@ -42,7 +42,16 @@ class ReviewForm extends React.Component {
     }
 
     handleTagsChange(tag) {
-        this.setState({tags: tag});
+        let newTags = [];
+        for (let el of tag) {
+            if (!el.value) {
+                let newTag = {label: el};
+                newTags.push(newTag);
+            } else {
+                newTags.push(el);
+            }
+        }
+        this.setState({tags: newTags});
     }
 
     handleNameChange(company) {
@@ -167,6 +176,22 @@ class ReviewForm extends React.Component {
                 <AsyncCreatableSelect
                     onChange={this.handleTagsChange}
                     loadOptions={this.searchTags}
+                    getOptionLabel={e => {
+                        if (e.label) {
+                            return e.label;
+                        } else {
+                            console.log(e);
+                            return e;
+                        }
+                    }}
+                    getOptionValue={e => {
+                        if (e.label) {
+                            return e.label;
+                        } else {
+                            console.log(e);
+                            return e;
+                        }
+                    }}
                     isMulti
                 />
             );

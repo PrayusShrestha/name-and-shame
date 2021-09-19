@@ -28,7 +28,7 @@ module.exports = (app) => {
 
     // Gets a list of all companies
     app.get('/companies', async (req, res) => {
-        // Company.remove({}, function(err){}); Uncomment for cleardb
+        // Company.remove({}, function(err){}); //Uncomment for cleardb
         companies = await findCompany();
         res.json({ "companies": companies });
     }); 

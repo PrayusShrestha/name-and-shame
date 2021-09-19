@@ -43,6 +43,10 @@
     text-align: center;
 }
 
+#avg-trash-center img {
+    max-height: 40px;
+}
+
 #avg-trash-title {
     margin: 0px;
 }

@@ -3,6 +3,7 @@ import './Review.css';
 import { renderTags } from '../../utils/renderUtils';
 
 function Review(props) {
+    console.log(props.review.tags);
     let tags = renderTags(props.review.tags);
     let date = new Date(props.review.timestamp);
 

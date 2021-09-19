@@ -37,8 +37,10 @@ module.exports = (app) => {
     // Add company
     app.post('/companies', async (req, res) => {
         const json = req.body;
+        console.log(req.body);
         const name = json.name;
         const industry = json.industry;
+        console.log(name);
         
         const [statusCode, err] = await createCompany(name, industry);
         res.json({

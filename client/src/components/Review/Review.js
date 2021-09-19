@@ -4,6 +4,7 @@ import { renderTags } from '../../utils/renderUtils';
 
 function Review(props) {
     let tags = renderTags(props.review.tags);
+    let date = new Date(props.review.timestamp);
 
     return (
         <div className="Review">
@@ -15,7 +16,7 @@ function Review(props) {
                 </div>
                 <div id = "review-right">
                     <p id = "review-descrip">{props.review.description}</p>
-                    <div id = "review-time"><span>{props.review.timestamp}</span></div>
+                    <div id = "review-time"><span>{date.toLocaleString()}</span></div>
                 </div>
             </div>
         </div>

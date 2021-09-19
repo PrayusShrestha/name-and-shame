@@ -52,13 +52,28 @@ class Company extends React.Component {
         }
     }
 
+    getAverageTrashiness(reviews) {
+        let count = 0;
+        let trashinessSum = 0.0;
+
+        for (let i in reviews) {
+            count++;
+            trashinessSum += reviews[i].trashiness;
+        }
+
+        return trashinessSum / count;
+    }
+
     render() {
         let tags = this.renderTags(this.state.tags);
         let reviews = this.renderReviews(this.state.reviews);
+        let avgTrashiness = this.getAverageTrashiness(this.state.reviews);
 
         return (
             <div className="Company">
-                <h1>{this.name}</h1>
+                <h2>{this.name}</h2>
+                <h3>Average Trashiness</h3>
+                <span>{avgTrashiness}/5</span>
                 <div className="company-tags">
                     {tags}
                 </div>

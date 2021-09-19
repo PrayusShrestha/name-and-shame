@@ -17,7 +17,8 @@ function Review(props) {
 
     return (
         <div className="Review">
-            <h3>{props.review.title}</h3>
+            <h4>{props.review.title}</h4>
+            <span>{props.review.trashiness}/5</span>
             <p>{props.review.description}</p>
             <div className="review-tags">{tags}</div>
             <span>{props.review.votes}</span>

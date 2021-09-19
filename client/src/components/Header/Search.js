@@ -1,5 +1,6 @@
 import { useHistory } from 'react-router-dom';
 import CompanySearch from '../CompanySearch';
+import './Search.css';
 
 function Search() {
     let history = useHistory();

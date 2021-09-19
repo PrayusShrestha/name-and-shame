@@ -1,4 +1,5 @@
 import Tag from './Tag';
+import './Review.css';
 
 function Review(props) {
     const renderTags = (tags) => {
@@ -17,12 +18,18 @@ function Review(props) {
 
     return (
         <div className="Review">
-            <h4>{props.review.title}</h4>
-            <span>{props.review.trashiness}/5</span>
-            <p>{props.review.description}</p>
-            <div className="review-tags">{tags}</div>
-            <span>{props.review.votes}</span>
-            <span>{props.review.timestamp}</span>
+            <h3 id = "review-title">{props.review.title}</h3>
+            <div id = "review-content">
+                <div id = "review-left">
+                    <span id = "review-trash">{props.review.trashiness}/5</span>
+                    <div className="review-tags">{tags}</div>
+                    <span>{props.review.votes}</span>
+                </div>
+                <div id = "review-right">
+                    <p id = "review-descrip">{props.review.description}</p>
+                    <span id = "review-time">{props.review.timestamp}</span>
+                </div>
+            </div>
         </div>
     );
 }

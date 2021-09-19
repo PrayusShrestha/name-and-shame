@@ -1,0 +1,33 @@
+.Company {
+    display: flex;
+    padding-top: 30px;
+    padding-bottom: 10px;
+    padding-right: 20%;
+    padding-left: 20%;
+}
+
+@media only screen and (max-width: 900px) {
+    .Company {
+        padding-right: 10%;
+        padding-left: 10%;
+    }
+}
+
+#company-header {
+    text-align: left;
+    margin-right: 10%;
+    position: sticky;
+}
+
+#company-reviews {
+    background-color: black;
+}
+
+#company-name {
+    color: black;
+    text-align: left;
+}
+
+.all-tags {
+    /* color: blue; */
+}

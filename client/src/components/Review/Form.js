@@ -212,7 +212,7 @@ class Form extends React.Component {
                 <input type="text" 
                     value={this.state.reviewTitle}
                     onChange={this.handleTitleChange}/>
-                <label>Trashiness</label>
+                <label>Trashiness (0-5)</label>
                 <br />
                 <input type="number"
                     value={this.state.trashiness}

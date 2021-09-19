@@ -1,5 +1,4 @@
 import React from 'react';
-import Header from './Header/Header';
 import Review from './Review/Review';
 import Tag from './Review/Tag';
 
@@ -62,7 +61,6 @@ class Company extends React.Component {
         }
 
         if (count == 0) return "No reviews";
-        
         return trashinessSum / count;
     }
 

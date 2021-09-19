@@ -7,7 +7,7 @@ function Header() {
         <div className="Header">
             <a href = "/" id = "site-title"><h1>Name And Shame</h1></a>
             <div id = "search-bar"><Search/></div>
-            <Link to="/companies/add">Write a review!</Link>
+            <Link to="/companies/add"><div id = "write-review">Write a review!</div></Link>
         </div>
     );
 }

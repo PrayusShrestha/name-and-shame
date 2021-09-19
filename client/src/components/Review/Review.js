@@ -3,6 +3,7 @@ import './Review.css';
 import { renderTags } from '../../utils/renderUtils';
 
 function Review(props) {
+    console.log(props.review.tags);
     let tags = renderTags(props.review.tags);
 
     return (
@@ -16,7 +17,7 @@ function Review(props) {
                 </div>
                 <div id = "review-right">
                     <p id = "review-descrip">{props.review.description}</p>
-                    <div id = "review-time"><span>{props.review.timestamp.slice(0, 10)}</span></div>
+                    <div id = "review-time"><span>{props.review.timestamp}</span></div>
                 </div>
             </div>
         </div>

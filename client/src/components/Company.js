@@ -1,6 +1,6 @@
 import React from 'react';
 import Review from './Review/Review';
-import Tag from './Review/Tag';
+import Header from './Header/Header';
 import './Company.css';
 
 import { renderTags } from '../utils/renderUtils';
@@ -54,7 +54,7 @@ class Company extends React.Component {
         let avg = Math.round(trashinessSum / count) - 1;
         console.log(avg);
         return [...Array(avg),].map((val, i) => (
-            <img src="/trash.png"></img>
+            <img src="/trash.png" alt = "trash can"></img>
         ));
     }
 
@@ -64,25 +64,28 @@ class Company extends React.Component {
         let avgTrashiness = this.getAverageTrashiness(this.state.reviews);
 
         return (
-            <div className="Company">
-                <div id = "company-header">
-                    <div id = "company-name"><h1>{this.name}</h1></div>
-                    <span>{this.state.industry}</span>
-                    
-                    <h3 id = "avg-trash-title">Average Trashiness</h3>
+            <div className="Company-whole">
+                <Header />
+                <div className = "Company">
+                    <div id = "company-header">
+                        <h1 id = "company-name">{this.name}</h1>
+                        <div id = "company-industry"><span>{this.state.industry}</span></div>
+                        
+                        <h3 id = "avg-trash-title">Average Trashiness</h3>
 
-                    <div id = "avg-trash-center">
-                        <img src="/trash.png"></img>
-                        <span id = "avg-trash">{avgTrashiness}</span>
+                        <div id = "avg-trash-center">
+                            <img src="/trash.png" alt = "trash can"></img>
+                            <span id = "avg-trash">{avgTrashiness}</span>
+                        </div>
+
+                        <div className="company-tags"  class = "all-tags">
+                            {tags}
+                        </div></div>
+
+                    <div className="company-reviews">
+                        {reviews}
                     </div>
-
-                    <div className="company-tags"  class = "all-tags">
-                        {tags}
-                    </div></div>
-
-                <div className="company-reviews">
-                    {reviews}
-                </div>
+                    </div>
             </div>
         );
     }

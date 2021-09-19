@@ -1,10 +1,17 @@
 #review-title {
-    color: red;
+    padding-top: 18px;
+    font-size: 27px;
 }
 
 #review-descrip {
     margin: 10px;
 
+}
+
+.Review {
+    height: auto;
+    width: auto;
+    background-color: #f5f5f5;
 }
 
 .review-tags {

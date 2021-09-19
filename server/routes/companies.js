@@ -7,11 +7,6 @@ const { addReview } = require('../utils/review_utils');
 
 module.exports = (app) => {
 
-<<<<<<< HEAD
-    app.get('/companies/search/:name', async (req, res) => {
-        let companies = await autoSearch(req.params.name);
-        res.json({'companies': companies});
-=======
     app.get('/tags/:name/:tag', async (req, res) => {
         console.log("tags");
         let tags = await findTags(req.params.name, req.params.tag);
@@ -21,7 +16,6 @@ module.exports = (app) => {
     app.get('/companies/search/:name', async (req, res) => {
         let companies = await autoSearch(req.params.name);
         res.send(companies);
->>>>>>> f0f48aeb24961e5be2a70df7fd8bd3202948a9c5
     });
 
     app.post('/companies/:name/:id', async (req, res) => {
@@ -58,15 +52,6 @@ module.exports = (app) => {
         res.send(company);
     });
 
-<<<<<<< HEAD
-    app.get('/companies/:name/:tag', async (req, res) => {
-        console.log(req.params.tag);
-        let tags = await findTags(req.params.name, req.params.tag);
-        res.json({'tags': tags});
-    });
-
-=======
->>>>>>> f0f48aeb24961e5be2a70df7fd8bd3202948a9c5
     // Create a review
     app.post('/companies/:name', async (req, res) => {
         const json = req.body;

@@ -7,8 +7,12 @@ const { addReview } = require('../utils/review_utils');
 
 module.exports = (app) => {
 
+    app.get('/companies/search/:name', async (req, res) => {
+        let companies = await autoSearch(req.params.name);
+        res.json({'companies': companies});
+    });
+
     app.post('/companies/:name/:id', async (req, res) => {
-        console.log('hi');
         let [status, err] = await upvote(req.params.name, req.params.id);
         if (status == 200) {
             res.send(200);
@@ -63,13 +67,6 @@ module.exports = (app) => {
         );
 
         res.json({ 'status': status, 'msg': err });
-    });
-
-    app.get('/companies/search/:name', async (req, res) => {
-        let companies = await autoSearch(req.params.name);
-        res.json({'companies': companies});
-    });
-
-   
+    });   
 }
 

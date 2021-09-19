@@ -6,7 +6,7 @@ const companySchema = new mongoose.Schema({
 		required: true,
 		unique: true,
 	},
-	industy: {
+	industry: {
 		type: String,
 		unique: false,
 	},
